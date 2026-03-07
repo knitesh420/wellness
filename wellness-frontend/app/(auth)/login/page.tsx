@@ -100,7 +100,7 @@ const LoginContent = () => {
               : null;
           const dashboardUrl = getDashboardForRole(userDetails.role);
 
-          router.replace(safeRedirect || dashboardUrl);
+          window.location.href = safeRedirect || dashboardUrl;
         } else {
           updateUserRole("user");
           const redirectParam = searchParams.get("redirect");
@@ -108,7 +108,7 @@ const LoginContent = () => {
             redirectParam && redirectParam.startsWith("/")
               ? redirectParam
               : null;
-          router.replace(safeRedirect || "/profile");
+          window.location.href = safeRedirect || "/profile";
         }
       } else {
         Swal.fire({

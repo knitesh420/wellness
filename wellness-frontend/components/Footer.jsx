@@ -11,7 +11,7 @@ const quickLinks = [
   { label: 'About Us', href: '/about' },
   { label: 'Shop All', href: '/shop' },
   { label: 'Our Science', href: '/science' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Blogs', href: '/blogs' },
   { label: 'Contact', href: '/contact' },
 ];
 
