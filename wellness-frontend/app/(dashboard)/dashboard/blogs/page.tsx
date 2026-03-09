@@ -1046,11 +1046,10 @@ const BlogsPage = () => {
                       <Button
                         type="button"
                         onClick={() => setAddStep(prev => prev + 1)}
-                        className="h-11 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg px-6"
-                        disabled={addStep === 1 && (!newBlog.title || !newBlog.content)}
+                        className="h-11 !bg-blue-600 hover:!bg-blue-700 !text-white font-bold rounded-lg px-8 shadow-lg shadow-blue-200/50 transition-all active:scale-95 flex items-center gap-2"
                       >
                         Next Step
-                        <ChevronRight className="w-4 h-4 ml-1.5" />
+                        <ChevronRight className="w-4 h-4" />
                       </Button>
                     ) : (
                       <Button
@@ -1318,11 +1317,10 @@ const BlogsPage = () => {
                           <Button
                             type="button"
                             onClick={() => setEditStep(prev => prev + 1)}
-                            className="h-11 bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg px-6"
-                            disabled={editStep === 1 && (!selectedBlog.title || !selectedBlog.content)}
+                            className="h-11 !bg-blue-600 hover:!bg-blue-700 !text-white font-bold rounded-lg px-8 shadow-lg shadow-blue-200/50 transition-all active:scale-95 flex items-center gap-2"
                           >
                             Next Step
-                            <ChevronRight className="w-4 h-4 ml-1.5" />
+                            <ChevronRight className="w-4 h-4" />
                           </Button>
                         ) : (
                           <Button
