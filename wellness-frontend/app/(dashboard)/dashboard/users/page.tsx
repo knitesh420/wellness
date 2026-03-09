@@ -458,7 +458,7 @@ const UsersPageContent = () => {
       if (token && typeof token === "string") token = token.replace(/^"|"$/g, "");
 
       const res = await fetch(getApiV1Url(`/users/${selectedUser._id}`), {
-        method: "PUT",
+        method: "PATCH",
         body: formData,
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
