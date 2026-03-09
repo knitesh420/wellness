@@ -1,0 +1,5 @@
+c:\Users\tanum\OneDrive\Desktop\wellness\wellness-frontend\app\(dashboard)\dashboard\reports\page.tsx
+c:\Users\tanum\OneDrive\Desktop\wellness\wellness-frontend\app\(dashboard)\doctors\appointments\page.tsx
+c:\Users\tanum\OneDrive\Desktop\wellness\wellness-frontend\app\(dashboard)\doctors\notes\page.tsx
+c:\Users\tanum\OneDrive\Desktop\wellness\wellness-frontend\app\(dashboard)\doctors\patients\page.tsx
+c:\Users\tanum\OneDrive\Desktop\wellness\wellness-frontend\app\(dashboard)\influencers\reports\page.tsx

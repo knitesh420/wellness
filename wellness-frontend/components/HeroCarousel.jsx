@@ -127,6 +127,12 @@ export default function HeroCarousel() {
                   src={getImageUrl(slide.imageUrl)}
                   alt={slide.title}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // If the image fails (e.g. backend unreachable), fall back to local Hero.png
+                    if (e.currentTarget.src !== window.location.origin + '/Hero.png') {
+                      e.currentTarget.src = '/Hero.png';
+                    }
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/40 to-transparent sm:bg-gradient-to-r sm:from-slate-900/70 sm:to-transparent" />
               </div>
