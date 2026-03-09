@@ -112,8 +112,8 @@
   }
 
   /* Dashboard Forms */
-  form,
-  .form-container,
+  .dashboard-root form,
+  .dashboard-root .form-container,
   .dashboard-root .DialogContent {
     background-color: #ffffff !important;
     border-radius: var(--radius) !important;

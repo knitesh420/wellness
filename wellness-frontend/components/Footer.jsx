@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Phone, Mail, ArrowRight, Instagram, Facebook, Twitter, Youtube } from 'lucide-react';
+import { MapPin, Phone, Mail, ArrowRight, Instagram, Facebook, Twitter, Youtube, Award, ShieldCheck, Layers, Microscope } from 'lucide-react';
 import NewsletterForm from './NewsletterForm';
 import img from "@/public/logo.jpeg"
 
@@ -39,10 +39,10 @@ const socialLinks = [
 ];
 
 const certBadges = [
-  { emoji: '🏅', label: 'GMP', sub: 'Certified' },
-  { emoji: '🔬', label: 'FSSAI', sub: 'Approved' },
-  { emoji: '🌿', label: 'ISO', sub: '9001:2015' },
-  { emoji: '✅', label: '3rd Party', sub: 'Lab Tested' },
+  { Icon: Award, label: 'GMP', sub: 'Certified' },
+  { Icon: Microscope, label: 'FSSAI', sub: 'Approved' },
+  { Icon: ShieldCheck, label: 'ISO', sub: '9001:2015' },
+  { Icon: Layers, label: '3rd Party', sub: 'Lab Tested' },
 ];
 
 export default function Footer() {
@@ -50,15 +50,17 @@ export default function Footer() {
     <footer className="bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-slate-300">
 
       {/* ── Cert strip ── */}
-      <div className="border-b border-slate-800">
-        <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-12">
-            {certBadges.map((b) => (
-              <div key={b.label} className="flex items-center gap-2.5">
-                <span className="text-2xl">{b.emoji}</span>
-                <div className="leading-none">
-                  <div className="text-[12px] font-bold text-white">{b.label}</div>
-                  <div className="text-[10px] text-slate-500">{b.sub}</div>
+      <div className="border-b border-slate-800/50">
+        <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
+            {certBadges.map(({ Icon, label, sub }) => (
+              <div key={label} className="flex items-center gap-3 group">
+                <div className="w-10 h-10 rounded-full bg-blue-500/5 flex items-center justify-center border border-white/5 transition-colors group-hover:bg-blue-500/10">
+                  <Icon className="w-5 h-5 text-blue-400/80 group-hover:text-blue-400 group-hover:scale-110 transition-all duration-300" />
+                </div>
+                <div className="leading-tight">
+                  <div className="text-[13px] font-bold text-slate-200 tracking-wide uppercase">{label}</div>
+                  <div className="text-[11px] text-slate-500 font-medium">{sub}</div>
                 </div>
               </div>
             ))}
@@ -203,14 +205,15 @@ export default function Footer() {
         </div>
 
         {/* ── Newsletter ── */}
-        <div className="mt-12 pt-10 border-t border-slate-800">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div>
-              <h4 className="text-white font-bold text-base mb-1">
-                🌿 Join the Wellness Community
+        <div className="mt-16 pt-12 border-t border-slate-800/50">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
+            <div className="max-w-md">
+              <h4 className="text-white font-bold text-2xl mb-2 flex items-center gap-3">
+                <span className="p-2.5 bg-blue-500/10 rounded-xl border border-white/5">🌿</span>
+                Join the Wellness Community
               </h4>
-              <p className="text-[13px] text-slate-400">
-                Subscribe for wellness tips, new launches & exclusive member discounts.
+              <p className="text-[14px] text-slate-400 leading-relaxed">
+                Subscribe for expert wellness tips, early access to new launches and exclusive member discounts. Let's thrive together.
               </p>
             </div>
             <NewsletterForm />

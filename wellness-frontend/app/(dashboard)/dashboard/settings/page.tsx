@@ -633,13 +633,13 @@ const SettingsPage = () => {
   // Debug current user
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-6xl mx-auto space-y-8 pb-20">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Settings</h1>
-          <p className="text-muted-foreground">
-            Manage your store settings and preferences
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Admin settings</h1>
+          <p className="text-sm text-slate-500">
+            Configure your store preferences, marketing parameters, and infrastructure
           </p>
         </div>
       </div>
@@ -647,44 +647,43 @@ const SettingsPage = () => {
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className="space-y-6"
+        className="space-y-8"
       >
-        <TabsList className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground">
-          <TabsTrigger value="profile" className="flex items-center gap-2">
-            <User className="w-4 h-4" />
-            Profile
-          </TabsTrigger>
-          <TabsTrigger value="seo" className="flex items-center gap-2">
-            <Search className="w-4 h-4" />
-            SEO
-          </TabsTrigger>
-          <TabsTrigger value="business" className="flex items-center gap-2">
-            <Building2 className="w-4 h-4" />
-            Business
-          </TabsTrigger>
-          <TabsTrigger
-            value="notifications"
-            className="flex items-center gap-2"
-          >
-            <Bell className="w-4 h-4" />
-            Notifications
-          </TabsTrigger>
-          <TabsTrigger value="payments" className="flex items-center gap-2">
-            <CreditCard className="w-4 h-4" />
-            Payments
-          </TabsTrigger>
-          <TabsTrigger value="shipping" className="flex items-center gap-2">
-            <Truck className="w-4 h-4" />
-            Shipping
-          </TabsTrigger>
-          <TabsTrigger value="security" className="flex items-center gap-2">
-            <Shield className="w-4 h-4" />
-            Security
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto no-scrollbar pb-1">
+          <TabsList className="bg-slate-100/80 p-1.5 rounded-xl h-12 border border-slate-200/50 inline-flex min-w-max">
+            <TabsTrigger value="profile" className="rounded-lg px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm flex items-center gap-2">
+              <User className="w-4 h-4" />
+              Profile
+            </TabsTrigger>
+            <TabsTrigger value="seo" className="rounded-lg px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm flex items-center gap-2">
+              <Search className="w-4 h-4" />
+              SEO
+            </TabsTrigger>
+            <TabsTrigger value="business" className="rounded-lg px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm flex items-center gap-2">
+              <Building2 className="w-4 h-4" />
+              Business
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="rounded-lg px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm flex items-center gap-2">
+              <Bell className="w-4 h-4" />
+              Notifications
+            </TabsTrigger>
+            <TabsTrigger value="payments" className="rounded-lg px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm flex items-center gap-2">
+              <CreditCard className="w-4 h-4" />
+              Payments
+            </TabsTrigger>
+            <TabsTrigger value="shipping" className="rounded-lg px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm flex items-center gap-2">
+              <Truck className="w-4 h-4" />
+              Shipping
+            </TabsTrigger>
+            <TabsTrigger value="security" className="rounded-lg px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-sm flex items-center gap-2">
+              <Shield className="w-4 h-4" />
+              Security
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Profile Settings */}
-        <TabsContent value="profile" className="space-y-6">
+        <TabsContent value="profile" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-400">
           <ProfileSettings
             profileData={profileData}
             setProfileData={setProfileData}

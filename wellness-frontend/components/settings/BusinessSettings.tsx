@@ -49,120 +49,145 @@ const BusinessSettings: React.FC<BusinessSettingsProps> = ({
   onSave
 }) => {
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Business Information</CardTitle>
-            <CardDescription>Manage your business details and legal information</CardDescription>
+    <Card className="border-slate-200 shadow-sm rounded-2xl overflow-hidden">
+      <CardHeader className="border-b border-slate-50 bg-slate-50/30 px-8 py-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <CardTitle className="text-xl font-bold text-slate-900 tracking-tight">Business information</CardTitle>
+            <CardDescription className="text-sm text-slate-500">Manage your business details and legal identification</CardDescription>
           </div>
-          {!editStates.business ? (
-            <Button onClick={() => onEdit('business')} variant="outline">
-              <Edit className="w-4 h-4 mr-2" />
-              Edit Business
-            </Button>
-          ) : (
-            <div className="flex gap-2">
-              <Button onClick={() => onCancel('business')} variant="outline" disabled={isLoading}>
-                Cancel
+          <div className="flex items-center gap-2">
+            {!editStates.business ? (
+              <Button
+                onClick={() => onEdit('business')}
+                className="h-10 px-6 rounded-xl font-bold shadow-sm"
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Edit business
               </Button>
-              <Button onClick={() => onSave('business')} disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Changes
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
+            ) : (
+              <>
+                <Button
+                  onClick={() => onCancel('business')}
+                  variant="outline"
+                  disabled={isLoading}
+                  className="h-10 px-4 rounded-xl border-slate-200 font-bold text-slate-600 hover:bg-slate-50"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => onSave('business')}
+                  disabled={isLoading}
+                  className="h-10 px-6 rounded-xl font-bold shadow-lg shadow-indigo-100 bg-indigo-600 hover:bg-indigo-700 text-white"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save changes
+                    </>
+                  )}
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label htmlFor="businessName">Business Name</Label>
+      <CardContent className="p-8 space-y-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="businessName" className="text-sm font-semibold text-slate-700 ml-1">Business name</Label>
             <Input
               id="businessName"
               value={businessData.businessName}
-              onChange={(e) => setBusinessData({...businessData, businessName: e.target.value})}
+              onChange={(e) => setBusinessData({ ...businessData, businessName: e.target.value })}
               disabled={!editStates.business}
+              className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
             />
           </div>
-          <div>
-            <Label htmlFor="businessEmail">Business Email</Label>
+          <div className="space-y-2">
+            <Label htmlFor="businessEmail" className="text-sm font-semibold text-slate-700 ml-1">Business email</Label>
             <Input
               id="businessEmail"
               type="email"
               value={businessData.businessEmail}
-              onChange={(e) => setBusinessData({...businessData, businessEmail: e.target.value})}
+              onChange={(e) => setBusinessData({ ...businessData, businessEmail: e.target.value })}
               disabled={!editStates.business}
+              className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
             />
           </div>
-          <div>
-            <Label htmlFor="businessPhone">Business Phone</Label>
+          <div className="space-y-2">
+            <Label htmlFor="businessPhone" className="text-sm font-semibold text-slate-700 ml-1">Business phone</Label>
             <Input
               id="businessPhone"
               value={businessData.businessPhone}
-              onChange={(e) => setBusinessData({...businessData, businessPhone: e.target.value})}
+              onChange={(e) => setBusinessData({ ...businessData, businessPhone: e.target.value })}
               disabled={!editStates.business}
+              className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
             />
           </div>
-          <div>
-            <Label htmlFor="website">Website</Label>
+          <div className="space-y-2">
+            <Label htmlFor="website" className="text-sm font-semibold text-slate-700 ml-1">Website</Label>
             <Input
               id="website"
               value={businessData.website}
-              onChange={(e) => setBusinessData({...businessData, website: e.target.value})}
+              onChange={(e) => setBusinessData({ ...businessData, website: e.target.value })}
               disabled={!editStates.business}
+              className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
             />
           </div>
         </div>
 
-        <div>
-          <Label htmlFor="businessAddress">Business Address</Label>
+        <div className="space-y-2">
+          <Label htmlFor="businessAddress" className="text-sm font-semibold text-slate-700 ml-1">Business address</Label>
           <Textarea
             id="businessAddress"
             value={businessData.businessAddress}
-            onChange={(e) => setBusinessData({...businessData, businessAddress: e.target.value})}
+            onChange={(e) => setBusinessData({ ...businessData, businessAddress: e.target.value })}
             rows={3}
             disabled={!editStates.business}
+            className="rounded-2xl border-slate-200 focus:border-indigo-500/30 p-4 leading-relaxed font-medium disabled:opacity-60"
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label htmlFor="gstNumber">GST Number</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="gstNumber" className="text-sm font-semibold text-slate-700 ml-1">Gst number</Label>
             <Input
               id="gstNumber"
               value={businessData.gstNumber}
-              onChange={(e) => setBusinessData({...businessData, gstNumber: e.target.value})}
+              onChange={(e) => setBusinessData({ ...businessData, gstNumber: e.target.value })}
               placeholder="27ABCDE1234F1Z5"
               disabled={!editStates.business}
+              className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
             />
           </div>
-          <div>
-            <Label htmlFor="panNumber">PAN Number</Label>
+          <div className="space-y-2">
+            <Label htmlFor="panNumber" className="text-sm font-semibold text-slate-700 ml-1">Pan number</Label>
             <Input
               id="panNumber"
               value={businessData.panNumber}
-              onChange={(e) => setBusinessData({...businessData, panNumber: e.target.value})}
+              onChange={(e) => setBusinessData({ ...businessData, panNumber: e.target.value })}
               placeholder="ABCDE1234F"
               disabled={!editStates.business}
+              className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
             />
           </div>
-          <div>
-            <Label htmlFor="businessType">Business Type</Label>
-            <Select value={businessData.businessType} onValueChange={(value) => setBusinessData({...businessData, businessType: value})} disabled={!editStates.business}>
-              <SelectTrigger>
+          <div className="space-y-2">
+            <Label htmlFor="businessType" className="text-sm font-semibold text-slate-700 ml-1">Business type</Label>
+            <Select
+              value={businessData.businessType}
+              onValueChange={(value) => setBusinessData({ ...businessData, businessType: value })}
+              disabled={!editStates.business}
+            >
+              <SelectTrigger className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="rounded-xl">
                 <SelectItem value="Private Limited">Private Limited</SelectItem>
                 <SelectItem value="Public Limited">Public Limited</SelectItem>
                 <SelectItem value="Partnership">Partnership</SelectItem>
@@ -171,73 +196,84 @@ const BusinessSettings: React.FC<BusinessSettingsProps> = ({
               </SelectContent>
             </Select>
           </div>
-          <div>
-            <Label htmlFor="foundedYear">Founded Year</Label>
+          <div className="space-y-2">
+            <Label htmlFor="foundedYear" className="text-sm font-semibold text-slate-700 ml-1">Founded year</Label>
             <Input
               id="foundedYear"
               value={businessData.foundedYear}
-              onChange={(e) => setBusinessData({...businessData, foundedYear: e.target.value})}
+              onChange={(e) => setBusinessData({ ...businessData, foundedYear: e.target.value })}
               placeholder="2020"
               disabled={!editStates.business}
+              className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
             />
           </div>
         </div>
 
-        <Separator />
+        <Separator className="bg-slate-100" />
 
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Social Media Links</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <Label htmlFor="facebook">Facebook</Label>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-indigo-50 rounded-lg">
+              <span className="text-xs font-bold text-indigo-600">@</span>
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 tracking-tight">Social media links</h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="facebook" className="text-sm font-semibold text-slate-700 ml-1">Facebook</Label>
               <Input
                 id="facebook"
                 value={businessData.socialMedia.facebook}
                 onChange={(e) => setBusinessData({
-                  ...businessData, 
-                  socialMedia: {...businessData.socialMedia, facebook: e.target.value}
+                  ...businessData,
+                  socialMedia: { ...businessData.socialMedia, facebook: e.target.value }
                 })}
                 placeholder="https://facebook.com/yourpage"
                 disabled={!editStates.business}
+                className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
               />
             </div>
-            <div>
-              <Label htmlFor="instagram">Instagram</Label>
+            <div className="space-y-2">
+              <Label htmlFor="instagram" className="text-sm font-semibold text-slate-700 ml-1">Instagram</Label>
               <Input
                 id="instagram"
                 value={businessData.socialMedia.instagram}
                 onChange={(e) => setBusinessData({
-                  ...businessData, 
-                  socialMedia: {...businessData.socialMedia, instagram: e.target.value}
+                  ...businessData,
+                  socialMedia: { ...businessData.socialMedia, instagram: e.target.value }
                 })}
                 placeholder="https://instagram.com/yourpage"
                 disabled={!editStates.business}
+                className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
               />
             </div>
-            <div>
-              <Label htmlFor="twitter">Twitter</Label>
+            <div className="space-y-2">
+              <Label htmlFor="twitter" className="text-sm font-semibold text-slate-700 ml-1">Twitter</Label>
               <Input
                 id="twitter"
                 value={businessData.socialMedia.twitter}
                 onChange={(e) => setBusinessData({
-                  ...businessData, 
-                  socialMedia: {...businessData.socialMedia, twitter: e.target.value}
+                  ...businessData,
+                  socialMedia: { ...businessData.socialMedia, twitter: e.target.value }
                 })}
                 placeholder="https://twitter.com/yourpage"
                 disabled={!editStates.business}
+                className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
               />
             </div>
-            <div>
-              <Label htmlFor="linkedin">LinkedIn</Label>
+            <div className="space-y-2">
+              <Label htmlFor="linkedin" className="text-sm font-semibold text-slate-700 ml-1">LinkedIn</Label>
               <Input
                 id="linkedin"
                 value={businessData.socialMedia.linkedin}
                 onChange={(e) => setBusinessData({
-                  ...businessData, 
-                  socialMedia: {...businessData.socialMedia, linkedin: e.target.value}
+                  ...businessData,
+                  socialMedia: { ...businessData.socialMedia, linkedin: e.target.value }
                 })}
                 placeholder="https://linkedin.com/company/yourcompany"
                 disabled={!editStates.business}
+                className="h-11 rounded-xl border-slate-200 focus:border-indigo-500/30 font-medium disabled:opacity-60"
               />
             </div>
           </div>

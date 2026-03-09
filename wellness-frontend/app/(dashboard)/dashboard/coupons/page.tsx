@@ -21,7 +21,7 @@ import {
   AlertCircle,
   History,
   Activity,
-  TrendingUp as Sparkles,
+  Sparkles,
   ChevronLeft,
   ChevronRight,
   Zap,
@@ -81,10 +81,10 @@ const CouponsPage = () => {
     status: 'Active' as 'Active' | 'Inactive'
   })
 
-  // Fetch data on component mount
+  // Fetch data on component mount and filter change
   useEffect(() => {
     dispatch(fetchCouponsData())
-  }, [dispatch])
+  }, [dispatch, filters.status, filters.name])
 
   // Handle filter changes
   const handleSearchChange = (value: string) => {
@@ -202,7 +202,9 @@ const CouponsPage = () => {
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    if (!dateString) return 'N/A'
+    const date = new Date(dateString)
+    return isNaN(date.getTime()) ? 'N/A' : date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -600,8 +602,8 @@ const CouponsPage = () => {
                                   <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                   <Input
                                     type="date"
-                                    className="h-12 pl-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20"
-                                    value={newCoupon.startDate}
+                                    className="h-12 pl-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20 cursor-pointer"
+                                    value={newCoupon.startDate ? new Date(newCoupon.startDate).toISOString().split('T')[0] : ''}
                                     onChange={(e) => setNewCoupon({ ...newCoupon, startDate: e.target.value })}
                                   />
                                 </div>
@@ -612,8 +614,8 @@ const CouponsPage = () => {
                                   <Clock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                                   <Input
                                     type="date"
-                                    className="h-12 pl-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20"
-                                    value={newCoupon.expiryDate}
+                                    className="h-12 pl-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20 cursor-pointer"
+                                    value={newCoupon.expiryDate ? new Date(newCoupon.expiryDate).toISOString().split('T')[0] : ''}
                                     onChange={(e) => setNewCoupon({ ...newCoupon, expiryDate: e.target.value })}
                                   />
                                 </div>
@@ -765,7 +767,7 @@ const CouponsPage = () => {
                               {newCoupon.type === 'Percentage' ? `${newCoupon.value}%` : `₹${newCoupon.value}`} <span className="text-sm font-medium text-slate-400 uppercase tracking-widest">Reduction</span>
                             </div>
                             <div className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">
-                              Active: {newCoupon.startDate || 'TBD'} — {newCoupon.expiryDate || 'PERPETUAL'}
+                              Active: {newCoupon.startDate ? formatDate(newCoupon.startDate) : 'TBD'} — {newCoupon.expiryDate ? formatDate(newCoupon.expiryDate) : 'PERPETUAL'}
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-4 mt-6 relative z-10">
@@ -854,7 +856,7 @@ const CouponsPage = () => {
                                   <Input
                                     type="date"
                                     className="h-12 pl-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20"
-                                    value={newCoupon.startDate ? newCoupon.startDate.split('T')[0] : ''}
+                                    value={newCoupon.startDate ? new Date(newCoupon.startDate).toISOString().split('T')[0] : ''}
                                     onChange={(e) => setNewCoupon({ ...newCoupon, startDate: e.target.value })}
                                   />
                                 </div>
@@ -866,7 +868,7 @@ const CouponsPage = () => {
                                   <Input
                                     type="date"
                                     className="h-12 pl-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20"
-                                    value={newCoupon.expiryDate ? newCoupon.expiryDate.split('T')[0] : ''}
+                                    value={newCoupon.expiryDate ? new Date(newCoupon.expiryDate).toISOString().split('T')[0] : ''}
                                     onChange={(e) => setNewCoupon({ ...newCoupon, expiryDate: e.target.value })}
                                   />
                                 </div>

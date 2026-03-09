@@ -17,7 +17,7 @@ import {
 
 const AUTO_SLIDE_MS = 4000;
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, viewMode = "grid" }) {
   const [imageIndex, setImageIndex] = useState(0);
   const dispatch = useDispatch();
 

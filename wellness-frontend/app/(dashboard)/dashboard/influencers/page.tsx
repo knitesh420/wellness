@@ -39,7 +39,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardDescription, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -294,884 +294,620 @@ const InfluencersPage = () => {
 
   return (
     <TooltipProvider>
-      <div className="space-y-6">
+      <div className="space-y-8 p-1">
         {error ? (
           <Error title="Error loading influencers" message={error} />
         ) : (
           <>
-            {/* Header */}
+            {/* Header section with refined typography */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-foreground">
-                  Influencers
+                <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+                  Influencer Network
                 </h1>
-                <p className="text-muted-foreground">
-                  Manage your social media influencers and partners
+                <p className="text-slate-500 text-sm mt-1">
+                  Orchestrate your creator partnerships and monitor brand resonance
                 </p>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" className="gap-2">
-                  <Download className="w-4 h-4" />
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-10 px-5 rounded-xl border-slate-200 bg-white font-bold text-xs uppercase tracking-widest text-slate-600 hover:bg-slate-50 transition-all"
+                >
+                  <Download className="w-4 h-4 mr-2" />
                   Export
                 </Button>
                 <Button
+                  size="sm"
                   onClick={() => setIsAddModalOpen(true)}
-                  className="gap-2"
+                  className="h-10 px-5 rounded-xl font-bold text-xs uppercase tracking-widest bg-slate-900 text-white hover:bg-slate-800 shadow-lg shadow-slate-200 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <UserPlus className="w-4 h-4" />
-                  Add Influencer
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Add partner
                 </Button>
               </div>
             </div>
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Total Influencers
-                      </p>
-                      <p className="text-2xl font-bold text-foreground">
-                        {influencers.length}
-                      </p>
-                      <p className="text-sm text-emerald-600 flex items-center gap-1">
-                        <TrendingUp className="w-3 h-3" />
-                        +12% from last month
-                      </p>
+            {/* Premium Stat Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { label: "Total partners", value: influencers.length, icon: Megaphone, color: "text-blue-600", bg: "bg-blue-50" },
+                { label: "Active resonance", value: influencers.filter(i => i.status === "active").length, icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-50" },
+                { label: "Channel diversity", value: new Set(influencers.map(i => i.platform)).size, icon: Instagram, color: "text-purple-600", bg: "bg-purple-50" },
+                { label: "Avg. commission", value: `${influencers.length > 0 ? (influencers.reduce((sum, i) => sum + i.commissionRate, 0) / influencers.length).toFixed(1) : "0"}%`, icon: Star, color: "text-orange-600", bg: "bg-orange-50" },
+              ].map((stat, i) => (
+                <Card key={i} className="border-none shadow-sm rounded-2xl bg-white overflow-hidden group hover:shadow-md transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                          {stat.label}
+                        </p>
+                        <p className="text-3xl font-black text-slate-900 tracking-tight">
+                          {stat.value}
+                        </p>
+                      </div>
+                      <div className={`p-3 ${stat.bg} ${stat.color} rounded-xl group-hover:scale-110 transition-transform duration-500`}>
+                        <stat.icon className="w-6 h-6" />
+                      </div>
                     </div>
-                    <Megaphone className="w-8 h-8 text-emerald-500" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Active Influencers
-                      </p>
-                      <p className="text-2xl font-bold text-foreground">
-                        {
-                          influencers.filter((i) => i.status === "active")
-                            .length
-                        }
-                      </p>
-                      <p className="text-sm text-blue-600 flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3" />
-                        {Math.round(
-                          (influencers.filter((i) => i.status === "active")
-                            .length /
-                            influencers.length) *
-                          100,
-                        ) || 0}
-                        % of total
-                      </p>
-                    </div>
-                    <CheckCircle className="w-8 h-8 text-blue-500" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Platforms</p>
-                      <p className="text-2xl font-bold text-foreground">
-                        {new Set(influencers.map((i) => i.platform)).size}
-                      </p>
-                      <p className="text-sm text-purple-600 flex items-center gap-1">
-                        <Award className="w-3 h-3" />
-                        Social platforms
-                      </p>
-                    </div>
-                    <Award className="w-8 h-8 text-purple-500" />
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">
-                        Avg. Commission
-                      </p>
-                      <p className="text-2xl font-bold text-foreground">
-                        {influencers.length > 0
-                          ? (
-                            influencers.reduce(
-                              (sum, i) => sum + i.commissionRate,
-                              0,
-                            ) / influencers.length
-                          ).toFixed(1)
-                          : "0"}
-                        %
-                      </p>
-                      <p className="text-sm text-orange-600 flex items-center gap-1">
-                        <Star className="w-3 h-3" />
-                        Commission rate
-                      </p>
-                    </div>
-                    <Star className="w-8 h-8 text-orange-500" />
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
 
-            {/* Filters and Search */}
-            <Card>
-              <CardContent className="p-6">
+            {/* Refined Filter & Search Bar */}
+            <Card className="border-none shadow-sm rounded-2xl bg-white/80 backdrop-blur-md overflow-hidden">
+              <CardContent className="p-4">
                 <div className="flex flex-col lg:flex-row gap-4">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                      <Input
-                        placeholder="Search influencers by name, email, phone, or platform..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
-                      />
-                    </div>
+                  <div className="flex-1 relative group">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+                    <Input
+                      placeholder="Search partners by name, email, platform..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="h-11 pl-11 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500/30 focus:bg-white transition-all text-sm font-medium"
+                    />
                   </div>
-                  <div className="flex gap-2">
-                    <Select
-                      value={statusFilter}
-                      onValueChange={setStatusFilter}
-                    >
-                      <SelectTrigger className="w-40">
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <SelectTrigger className="w-[140px] h-11 rounded-xl border-slate-100 bg-slate-50 font-bold text-xs uppercase tracking-widest text-slate-600 focus:ring-indigo-500/20">
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Status</SelectItem>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                        <SelectItem value="pending">Pending</SelectItem>
+                      <SelectContent className="rounded-xl border-slate-100 shadow-2xl">
+                        <SelectItem value="all" className="text-xs font-bold uppercase tracking-wider">All status</SelectItem>
+                        <SelectItem value="active" className="text-xs font-bold uppercase tracking-wider">Active</SelectItem>
+                        <SelectItem value="inactive" className="text-xs font-bold uppercase tracking-wider">Inactive</SelectItem>
+                        <SelectItem value="pending" className="text-xs font-bold uppercase tracking-wider">Pending</SelectItem>
                       </SelectContent>
                     </Select>
-                    <Select
-                      value={platformFilter}
-                      onValueChange={setPlatformFilter}
-                    >
-                      <SelectTrigger className="w-40">
+
+                    <Select value={platformFilter} onValueChange={setPlatformFilter}>
+                      <SelectTrigger className="w-[140px] h-11 rounded-xl border-slate-100 bg-slate-50 font-bold text-xs uppercase tracking-widest text-slate-600 focus:ring-indigo-500/20">
                         <SelectValue placeholder="Platform" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Platforms</SelectItem>
-                        <SelectItem value="Instagram">Instagram</SelectItem>
-                        <SelectItem value="Youtube">YouTube</SelectItem>
-                        <SelectItem value="Twitter">Twitter</SelectItem>
-                        <SelectItem value="Facebook">Facebook</SelectItem>
+                      <SelectContent className="rounded-xl border-slate-100 shadow-2xl">
+                        <SelectItem value="all" className="text-xs font-bold uppercase tracking-wider">All platforms</SelectItem>
+                        <SelectItem value="Instagram" className="text-xs font-bold uppercase tracking-wider">Instagram</SelectItem>
+                        <SelectItem value="Youtube" className="text-xs font-bold uppercase tracking-wider">YouTube</SelectItem>
+                        <SelectItem value="Twitter" className="text-xs font-bold uppercase tracking-wider">Twitter</SelectItem>
+                        <SelectItem value="Facebook" className="text-xs font-bold uppercase tracking-wider">Facebook</SelectItem>
                       </SelectContent>
                     </Select>
-                    <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="w-40">
-                        <SelectValue placeholder="Sort by" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="name">Name</SelectItem>
-                        <SelectItem value="platform">Platform</SelectItem>
-                        <SelectItem value="followers">Followers</SelectItem>
-                        <SelectItem value="category">Category</SelectItem>
-                        <SelectItem value="commissionRate">
-                          Commission
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        setSortOrder(sortOrder === "asc" ? "desc" : "asc")
-                      }
-                    >
-                      {sortOrder === "asc" ? "↑" : "↓"}
-                    </Button>
 
-                    {/* View Toggle */}
-                    <div className="flex border border-input rounded-lg overflow-hidden">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant={viewMode === "grid" ? "default" : "ghost"}
-                            size="icon"
-                            onClick={() => setViewMode("grid")}
-                            className="rounded-none"
-                          >
-                            <Grid3X3 className="w-4 h-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Grid view</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button
-                            variant={viewMode === "table" ? "default" : "ghost"}
-                            size="icon"
-                            onClick={() => setViewMode("table")}
-                            className="rounded-none"
-                          >
-                            <List className="w-4 h-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>List view</p>
-                        </TooltipContent>
-                      </Tooltip>
+                    <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl ml-2">
+                      <Button
+                        variant={viewMode === "grid" ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => setViewMode("grid")}
+                        className={`h-9 px-4 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}`}
+                      >
+                        <Grid3X3 className="w-4 h-4 mr-2" />
+                        <span className="text-xs font-bold uppercase tracking-wider">Grid</span>
+                      </Button>
+                      <Button
+                        variant={viewMode === "table" ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => setViewMode("table")}
+                        className={`h-9 px-4 rounded-lg transition-all ${viewMode === 'table' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}`}
+                      >
+                        <List className="w-4 h-4 mr-2" />
+                        <span className="text-xs font-bold uppercase tracking-wider">Table</span>
+                      </Button>
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Content */}
+            {/* Content Display */}
             {isLoading ? (
-              <Loader variant="skeleton" message="Loading influencers..." />
+              <Loader variant="skeleton" message="Accessing network database..." />
             ) : filteredInfluencers.length === 0 ? (
               <NoData
-                message="No influencers found"
-                description="Get started by adding your first influencer"
-                icon={
-                  <Megaphone className="w-full h-full text-muted-foreground/60" />
-                }
-                action={{
-                  label: "Add Influencer",
-                  onClick: () => setIsAddModalOpen(true),
-                }}
+                message="No matches detected"
+                description="The search parameters did not yield any influencer profiles from the current network."
+                icon={<Megaphone className="w-full h-full text-slate-200" />}
                 size="lg"
               />
             ) : (
               <>
-                {viewMode === "table" && (
-                  <Card>
-                    <CardContent className="p-0">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Influencer</TableHead>
-                            <TableHead>Platform</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Followers</TableHead>
-                            <TableHead>Category</TableHead>
-                            <TableHead>Commission</TableHead>
-                            <TableHead>Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {paginatedInfluencers.map((influencer) => {
-                            const PlatformIcon = getPlatformIcon(
-                              influencer.platform,
-                            );
-                            return (
-                              <TableRow key={influencer.id}>
-                                <TableCell>
-                                  <div className="flex items-center gap-3">
-                                    <Avatar className="w-10 h-10">
-                                      <AvatarImage src={influencer.imageUrl} />
-                                      <AvatarFallback>
-                                        {influencer.name
-                                          .split(" ")
-                                          .map((n) => n[0])
-                                          .join("")}
-                                      </AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                      <p className="font-medium">
-                                        {influencer.name}
-                                      </p>
-                                      <p className="text-sm text-muted-foreground">
-                                        {influencer.location}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <PlatformIcon className="w-4 h-4 text-muted-foreground" />
-                                    <span>{influencer.platform}</span>
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  <Badge
-                                    variant={getStatusColor(influencer.status)}
-                                  >
-                                    {influencer.status}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-1">
-                                    <Users className="w-4 h-4 text-muted-foreground" />
-                                    {influencer.followers.toLocaleString()}
-                                  </div>
-                                </TableCell>
-                                <TableCell>{influencer.category}</TableCell>
-                                <TableCell>
-                                  <span className="font-medium">
-                                    {influencer.commissionRate}%
-                                  </span>
-                                </TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button
-                                          variant="ghost"
-                                          size="sm"
-                                          onClick={() =>
-                                            handleEditInfluencer(influencer)
-                                          }
-                                        >
-                                          <Eye className="w-4 h-4" />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        View Details
-                                      </TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button
-                                          variant="ghost"
-                                          size="sm"
-                                          onClick={() =>
-                                            handleEditInfluencer(influencer)
-                                          }
-                                        >
-                                          <Edit className="w-4 h-4" />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        Edit Influencer
-                                      </TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button
-                                          variant="ghost"
-                                          size="sm"
-                                          onClick={() =>
-                                            handleDeleteInfluencer(
-                                              influencer.id,
-                                            )
-                                          }
-                                        >
-                                          <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>
-                                        Delete Influencer
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* Grid View */}
-                {viewMode === "grid" && (
+                {viewMode === "grid" ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {paginatedInfluencers.map((influencer) => {
                       const PlatformIcon = getPlatformIcon(influencer.platform);
                       return (
                         <Card
                           key={influencer.id}
-                          className="flex flex-col h-full"
+                          className="group border-none shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 rounded-[24px] bg-white overflow-hidden flex flex-col h-full"
                         >
-                          <CardContent className="p-6 flex-1 flex flex-col">
-                            <div className="flex items-center gap-4 mb-4">
-                              <Avatar className="w-12 h-12">
-                                <AvatarImage src={influencer.imageUrl} />
-                                <AvatarFallback>
-                                  {influencer.name
-                                    .split(" ")
-                                    .map((n) => n[0])
-                                    .join("")}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1">
-                                <h3 className="font-semibold">
-                                  {influencer.name}
-                                </h3>
-                                <p className="text-sm text-muted-foreground">
-                                  {influencer.location}
-                                </p>
+                          <CardHeader className="pb-4 pt-6 px-6">
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-center gap-4">
+                                <Avatar className="h-14 w-14 rounded-2xl border-2 border-indigo-50 shadow-sm ring-4 ring-indigo-50/20">
+                                  <AvatarImage src={influencer.imageUrl} alt={influencer.name} />
+                                  <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-xl">
+                                    {influencer.name.charAt(0)}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div className="space-y-1">
+                                  <CardTitle className="text-xl font-bold text-slate-900 tracking-tight leading-tight">
+                                    {influencer.name}
+                                  </CardTitle>
+                                  <div className="flex items-center gap-2">
+                                    <Badge variant={getStatusColor(influencer.status)} className="h-5 rounded-lg px-2 text-[10px] font-bold uppercase tracking-wider">
+                                      {influencer.status}
+                                    </Badge>
+                                    <span className="text-[10px] font-bold text-slate-400 flex items-center gap-1 uppercase tracking-widest leading-none">
+                                      <PlatformIcon className="w-3 h-3 text-indigo-500" />
+                                      {influencer.platform}
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
-                              <Badge
-                                variant={getStatusColor(influencer.status)}
-                                className="text-xs"
-                              >
-                                {influencer.status}
-                              </Badge>
+                            </div>
+                          </CardHeader>
+                          <CardContent className="space-y-6 flex-1 flex flex-col px-6 pb-6 pt-0">
+                            <div className="grid grid-cols-2 gap-3">
+                              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100/50 space-y-1">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                                  <Users className="w-3 h-3" />
+                                  Followers
+                                </span>
+                                <p className="text-sm font-black text-slate-700">{influencer.followers.toLocaleString()}</p>
+                              </div>
+                              <div className="p-3 bg-slate-50 rounded-xl border border-slate-100/50 space-y-1">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                                  <Star className="w-3 h-3" />
+                                  Commission
+                                </span>
+                                <p className="text-sm font-black text-indigo-600">{influencer.commissionRate}%</p>
+                              </div>
                             </div>
 
-                            <div className="space-y-2 mb-4">
-                              <div className="flex items-center gap-2 text-sm">
-                                <PlatformIcon className="w-4 h-4 text-muted-foreground" />
-                                {influencer.platform}
-                              </div>
-                              <div className="flex items-center gap-2 text-sm">
-                                <Users className="w-4 h-4 text-muted-foreground" />
-                                {influencer.followers.toLocaleString()}{" "}
-                                followers
-                              </div>
-                              <div className="flex items-center gap-2 text-sm">
-                                <MapPin className="w-4 h-4 text-muted-foreground" />
+                            <div className="space-y-2 flex-1">
+                              <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                <MapPin className="w-3 h-3 text-indigo-400" />
                                 {influencer.location}
                               </div>
-                              <div className="flex items-center gap-2 text-sm">
-                                <Star className="w-4 h-4 text-orange-500" />
-                                {influencer.commissionRate}% commission
+                              <div className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                <Award className="w-3 h-3 text-indigo-400" />
+                                {influencer.category}
                               </div>
                             </div>
 
-                            <div className="mt-auto">
-                              <div className="flex gap-2">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="flex-1"
-                                  onClick={() =>
-                                    handleEditInfluencer(influencer)
-                                  }
-                                >
-                                  <Eye className="w-4 h-4 mr-2" />
-                                  View
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="flex-1"
-                                  onClick={() =>
-                                    handleEditInfluencer(influencer)
-                                  }
-                                >
-                                  <Edit className="w-4 h-4 mr-2" />
-                                  Edit
-                                </Button>
-                              </div>
+                            <div className="flex gap-2 pt-4 border-t border-slate-50 mt-auto">
+                              <Button
+                                onClick={() => handleEditInfluencer(influencer)}
+                                variant="outline"
+                                className="flex-1 h-10 rounded-xl gap-2 font-bold text-xs uppercase tracking-widest border-slate-200 text-slate-600 hover:bg-slate-50"
+                              >
+                                <Edit className="w-4 h-4" />
+                                Modify
+                              </Button>
+                              <Button
+                                onClick={() => { }}
+                                className="flex-1 h-10 rounded-xl gap-2 font-bold text-xs uppercase tracking-widest bg-slate-900 text-white hover:bg-slate-800 shadow-lg shadow-slate-200"
+                              >
+                                <Eye className="w-4 h-4" />
+                                View
+                              </Button>
                             </div>
                           </CardContent>
                         </Card>
                       );
                     })}
                   </div>
+                ) : (
+                  <Card className="border-none shadow-sm rounded-[24px] bg-white overflow-hidden">
+                    <Table>
+                      <TableHeader className="bg-slate-50/50">
+                        <TableRow className="border-slate-100/50 hover:bg-transparent">
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest">Partner Identity</TableHead>
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest">Platform Metrics</TableHead>
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest">Specialization</TableHead>
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest">Status</TableHead>
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {paginatedInfluencers.map((influencer) => (
+                          <TableRow key={influencer.id} className="border-slate-100/50 group transition-colors hover:bg-slate-50/50">
+                            <TableCell className="py-4 px-6">
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-10 w-10 rounded-xl border-2 border-slate-50 group-hover:scale-105 transition-transform">
+                                  <AvatarImage src={influencer.imageUrl} alt={influencer.name} />
+                                  <AvatarFallback className="bg-slate-100 text-slate-500 font-bold text-xs">
+                                    {influencer.name.charAt(0)}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div className="flex flex-col">
+                                  <span className="font-bold text-slate-900">{influencer.name}</span>
+                                  <span className="text-xs font-medium text-slate-400">{influencer.email}</span>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="py-4 px-6">
+                              <div className="flex flex-col gap-0.5">
+                                <div className="flex items-center gap-1.5 font-bold text-slate-700">
+                                  {React.createElement(getPlatformIcon(influencer.platform), { className: "w-3 h-3 text-indigo-500" })}
+                                  <span className="text-sm">{influencer.platform}</span>
+                                </div>
+                                <span className="text-[10px] font-bold text-slate-400 tracking-wide uppercase">
+                                  {influencer.followers.toLocaleString()} REACH
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="py-4 px-6">
+                              <Badge variant="outline" className="rounded-lg border-slate-200 text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                                {influencer.category}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="py-4 px-6">
+                              <Badge variant={getStatusColor(influencer.status)} className="rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                                {influencer.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="py-4 px-6 text-right">
+                              <div className="flex justify-end gap-1">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      onClick={() => handleEditInfluencer(influencer)}
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-9 w-9 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50"
+                                    >
+                                      <Edit className="w-4 h-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Modify Record</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      onClick={() => handleDeleteInfluencer(influencer.id)}
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-9 w-9 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Erase Profile</TooltipContent>
+                                </Tooltip>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Card>
                 )}
 
-                {/* Pagination */}
-                {!isLoading &&
-                  filteredInfluencers.length > 0 &&
-                  totalPages > 1 && (
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm text-muted-foreground">
-                        Showing {startIndex + 1} to{" "}
-                        {Math.min(
-                          startIndex + pagination.limit,
-                          filteredInfluencers.length,
-                        )}{" "}
-                        of {filteredInfluencers.length} influencers
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() =>
-                            handlePageChange(Math.max(pagination.page - 1, 1))
-                          }
-                          disabled={pagination.page === 1}
-                        >
-                          <ChevronLeft className="w-4 h-4" />
-                        </Button>
-                        <span className="text-sm">
-                          Page {pagination.page} of {totalPages}
-                        </span>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() =>
-                            handlePageChange(
-                              Math.min(pagination.page + 1, totalPages),
-                            )
-                          }
-                          disabled={pagination.page === totalPages}
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </Button>
+                {/* Pagination Control */}
+                {filteredInfluencers.length > 0 && totalPages > 1 && (
+                  <div className="flex items-center justify-between px-2 pt-4">
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">
+                      Page {pagination.page} of {totalPages}
+                    </p>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(Math.max(pagination.page - 1, 1))}
+                        disabled={pagination.page === 1}
+                        className="h-10 px-4 rounded-xl border-slate-200 font-bold text-xs uppercase tracking-widest transition-all"
+                      >
+                        <ChevronLeft className="w-4 h-4 mr-1" />
+                        Previous
+                      </Button>
+                      <div className="flex items-center gap-1 mx-2">
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => i + 1).map((page) => (
+                          <Button
+                            key={page}
+                            variant={pagination.page === page ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => handlePageChange(page)}
+                            className={`w-10 h-10 rounded-xl text-xs font-black transition-all ${pagination.page === page ? 'bg-slate-900 shadow-lg scale-110' : 'border-slate-200'}`}
+                          >
+                            {page}
+                          </Button>
+                        ))}
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(Math.min(pagination.page + 1, totalPages))}
+                        disabled={pagination.page === totalPages}
+                        className="h-10 px-4 rounded-xl border-slate-200 font-bold text-xs uppercase tracking-widest transition-all"
+                      >
+                        Next
+                        <ChevronRight className="w-4 h-4 ml-1" />
+                      </Button>
                     </div>
-                  )}
+                  </div>
+                )}
               </>
             )}
 
             {/* Add Influencer Modal */}
             <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-              <DialogContent className="max-w-2xl p-0 overflow-hidden border-none shadow-2xl rounded-2xl bg-white dark:bg-slate-950">
-                <DialogHeader className="px-8 py-6 border-b bg-slate-50/50 dark:bg-slate-900/50 sticky top-0 z-10 backdrop-blur-sm">
-                  <div className="space-y-1">
-                    <DialogTitle className="text-2xl font-black uppercase tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-3">
-                      <div className="p-2 bg-primary/10 rounded-xl">
-                        <Megaphone className="w-6 h-6 text-primary" />
-                      </div>
-                      Influencer Procurement
-                    </DialogTitle>
-                    <DialogDescription className="text-slate-500 dark:text-slate-400 font-medium">
-                      Onboard new social capital nodes into the Wellness Fuel growth network.
-                    </DialogDescription>
+              <DialogContent className="max-w-2xl p-0 overflow-hidden border-none shadow-2xl rounded-[32px] bg-white/95 backdrop-blur-xl">
+                <DialogHeader className="px-10 pt-10 pb-6 bg-gradient-to-br from-slate-50 to-white">
+                  <div className="flex items-center gap-5">
+                    <div className="p-4 bg-indigo-500 rounded-2xl shadow-lg shadow-indigo-100 ring-4 ring-indigo-50">
+                      <UserPlus className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="space-y-1">
+                      <DialogTitle className="text-2xl font-black text-slate-900 tracking-tight">Onboard partner</DialogTitle>
+                      <DialogDescription className="text-slate-500 font-medium leading-relaxed">
+                        Integrate a new social resonance node into the ecosystem
+                      </DialogDescription>
+                    </div>
                   </div>
                 </DialogHeader>
 
-                <div className="p-8 space-y-8 overflow-y-auto max-h-[calc(90vh-180px)]">
-                  {/* Avatar Section - Top Center */}
-                  <div className="flex flex-col items-center space-y-4 py-8 bg-slate-50 dark:bg-slate-900/50 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Identity Visualizer</Label>
-                    <div className="relative group">
-                      <Avatar className="w-32 h-32 border-4 border-white dark:border-slate-800 shadow-2xl transition-all duration-500 group-hover:scale-105">
-                        <AvatarImage src="/placeholder-influencer.svg" />
-                        <AvatarFallback className="text-3xl font-black bg-primary/10 text-primary">INF</AvatarFallback>
+                <div className="px-10 pb-10 space-y-8">
+                  <div className="group relative flex flex-col items-center py-8 bg-slate-50/50 rounded-[32px] border-2 border-dashed border-slate-200 hover:border-indigo-400 hover:bg-slate-50 transition-all duration-500">
+                    <div className="relative">
+                      <Avatar className="w-24 h-24 border-4 border-white shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                        <AvatarFallback className="text-2xl font-black bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400">
+                          <Camera className="w-8 h-8 opacity-40" />
+                        </AvatarFallback>
                       </Avatar>
-                      <button className="absolute bottom-1 right-1 p-2.5 bg-primary text-white rounded-full shadow-lg hover:bg-primary/90 transition-all hover:scale-110">
-                        <Camera className="w-4 h-4" />
+                      <button className="absolute -bottom-1 -right-1 p-2.5 bg-indigo-600 text-white rounded-xl shadow-xl hover:scale-110 active:scale-95 transition-all">
+                        <Upload className="w-4 h-4" />
                       </button>
                     </div>
-                    <div className="flex gap-3 mt-4">
-                      <Button variant="outline" size="sm" className="h-9 px-4 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-white dark:bg-slate-900 shadow-sm">
-                        <Upload className="w-4 h-4 mr-2" />
-                        Upload Identity
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-9 px-4 rounded-xl font-bold uppercase tracking-widest text-[10px] text-destructive hover:bg-red-50 dark:hover:bg-red-950/30">
-                        Purge
-                      </Button>
-                    </div>
+                    <p className="mt-4 text-xs font-bold text-slate-400 uppercase tracking-widest leading-none">
+                      Deploy profile visual
+                    </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-3">
-                      <Label htmlFor="addName" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Legal Designation</Label>
-                      <Input id="addName" placeholder="Full Name" className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="addName" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Identity name</Label>
+                      <Input id="addName" placeholder="e.g. Rahul Sharma" className="h-12 rounded-xl border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500/30 transition-all font-medium" />
                     </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="addEmail" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Secure Email Node</Label>
-                      <div className="relative">
-                        <Input
-                          id="addEmail"
-                          type="email"
-                          placeholder="influencer@wellness.com"
-                          className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20"
-                        />
-                      </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="addEmail" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Email gateway</Label>
+                      <Input id="addEmail" type="email" placeholder="rahul@example.com" className="h-12 rounded-xl border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500/30 transition-all font-medium" />
                     </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="addPhone" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Direct Contact Vector</Label>
-                      <Input id="addPhone" placeholder="+91 XXXXX XXXXX" className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20" />
+                    <div className="space-y-2">
+                      <Label htmlFor="addPhone" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Contact pulse</Label>
+                      <Input id="addPhone" placeholder="+91 XXXXX XXXXX" className="h-12 rounded-xl border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500/30 transition-all font-medium" />
                     </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="addPlatform" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Primary Network Focus</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="addPlatform" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Digital channel</Label>
                       <Select>
-                        <SelectTrigger className="h-12 rounded-xl border-slate-200 shadow-sm font-bold">
+                        <SelectTrigger className="h-12 rounded-xl border-slate-100 bg-slate-50/50 font-bold text-[10px] uppercase tracking-wider text-slate-600">
                           <SelectValue placeholder="Select platform" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                          <SelectItem value="Instagram" className="rounded-lg font-bold">Instagram</SelectItem>
-                          <SelectItem value="Youtube" className="rounded-lg font-bold">YouTube</SelectItem>
-                          <SelectItem value="Twitter" className="rounded-lg font-bold">Twitter</SelectItem>
-                          <SelectItem value="Facebook" className="rounded-lg font-bold">Facebook</SelectItem>
+                        <SelectContent className="rounded-xl border-slate-100 shadow-2xl">
+                          <SelectItem value="Instagram" className="text-xs font-bold uppercase tracking-wider">Instagram</SelectItem>
+                          <SelectItem value="Youtube" className="text-xs font-bold uppercase tracking-wider">YouTube</SelectItem>
+                          <SelectItem value="Twitter" className="text-xs font-bold uppercase tracking-wider">Twitter</SelectItem>
+                          <SelectItem value="Facebook" className="text-xs font-bold uppercase tracking-wider">Facebook</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="addFollowers" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Relative Reach Index</Label>
-                      <Input
-                        id="addFollowers"
-                        type="number"
-                        placeholder="Total Followers"
-                        className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20"
-                      />
+                    <div className="space-y-2">
+                      <Label htmlFor="addFollowers" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Reach index</Label>
+                      <Input id="addFollowers" type="number" placeholder="e.g. 50000" className="h-12 rounded-xl border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500/30 transition-all font-black" />
                     </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="addCommission" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Remuneration Rate (%)</Label>
-                      <Input id="addCommission" type="number" placeholder="Percentage" className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20" />
-                    </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="addCategory" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Niche Classification</Label>
-                      <Input id="addCategory" placeholder="e.g. Health & Wellness" className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20" />
-                    </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="addSocialLinks" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Platform Identity Link</Label>
-                      <Input
-                        id="addSocialLinks"
-                        placeholder="URL Handle"
-                        className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20"
-                      />
+                    <div className="space-y-2">
+                      <Label htmlFor="addCommission" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Incentive rate (%)</Label>
+                      <Input id="addCommission" type="number" placeholder="e.g. 10" className="h-12 rounded-xl border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500/30 transition-all font-black text-indigo-600" />
                     </div>
                   </div>
-                </div>
 
-                <DialogFooter className="px-8 py-6 border-t bg-slate-50/50 dark:bg-slate-900/50 sticky bottom-0 z-10 backdrop-blur-sm">
-                  <Button
-                    variant="outline"
-                    className="h-12 px-6 rounded-xl font-black uppercase tracking-widest text-[11px] border-slate-200 hover:bg-slate-100 dark:border-slate-800"
-                    onClick={() => setIsAddModalOpen(false)}
-                  >
-                    Abort Onboarding
-                  </Button>
-                  <Button
-                    onClick={() => handleAddInfluencer({})}
-                    disabled={modalLoading}
-                    className="h-12 px-8 rounded-xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    {modalLoading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      "Finalize Procurement"
-                    )}
-                  </Button>
-                </DialogFooter>
+                  <div className="flex gap-4 pt-4 mt-2">
+                    <Button
+                      variant="outline"
+                      className="flex-1 h-12 rounded-2xl border-slate-200 font-bold text-xs uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all"
+                      onClick={() => setIsAddModalOpen(false)}
+                    >
+                      Abort
+                    </Button>
+                    <Button
+                      onClick={() => handleAddInfluencer({})}
+                      disabled={modalLoading}
+                      className="flex-1 h-12 rounded-2xl font-bold text-xs uppercase tracking-widest bg-slate-900 text-white shadow-xl shadow-slate-200 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      {modalLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Authorize integration"}
+                    </Button>
+                  </div>
+                </div>
               </DialogContent>
             </Dialog>
 
             {/* Edit Influencer Modal */}
             <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-              <DialogContent className="max-w-[1000px] w-[95vw] p-0 overflow-hidden border-none shadow-2xl rounded-2xl bg-white dark:bg-slate-950">
-                <DialogHeader className="px-8 py-6 border-b bg-slate-50/50 dark:bg-slate-900/50 sticky top-0 z-10 backdrop-blur-sm">
-                  <div className="space-y-1">
-                    <DialogTitle className="text-2xl font-black uppercase tracking-tight text-slate-900 dark:text-slate-50 flex items-center gap-3">
-                      <div className="p-2 bg-primary/10 rounded-xl">
-                        <Users className="w-6 h-6 text-primary" />
-                      </div>
-                      Influence Matrix Intelligence
-                    </DialogTitle>
-                    <DialogDescription className="text-slate-500 dark:text-slate-400 font-medium">
-                      Calibrate social engagement parameters and monitor conversion trajectory.
-                    </DialogDescription>
-                  </div>
-                </DialogHeader>
-
+              <DialogContent className="max-w-4xl p-0 overflow-hidden border-none shadow-2xl rounded-[32px] bg-white/95 backdrop-blur-2xl">
                 {selectedInfluencer && (
-                  <div className="overflow-y-auto max-h-[70vh]">
-                    <div className="p-8">
-                      {/* Identity Header */}
-                      <div className="mb-8 flex flex-col md:flex-row items-center gap-8 bg-gradient-to-br from-slate-50 to-white dark:from-slate-900/50 dark:to-slate-950 p-8 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-8 opacity-5">
-                          <Megaphone className="w-32 h-32 text-primary" />
-                        </div>
-
-                        <div className="relative group z-10">
-                          <Avatar className="w-32 h-32 border-4 border-white dark:border-slate-800 shadow-2xl transition-all duration-500 group-hover:scale-105">
-                            <AvatarImage
-                              src={selectedInfluencer.imageUrl || "/placeholder-influencer.svg"}
-                              className="object-cover"
-                            />
-                            <AvatarFallback className="text-3xl font-black bg-primary/10 text-primary">
-                              {selectedInfluencer.firstName[0]}{selectedInfluencer.lastName[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <button className="absolute bottom-1 right-1 p-2.5 bg-primary text-white rounded-full shadow-lg hover:bg-primary/90 transition-all hover:scale-110">
-                            <Camera className="w-4 h-4" />
-                          </button>
-                        </div>
-
-                        <div className="flex-1 text-center md:text-left space-y-2 z-10">
-                          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                            <h3 className="text-2xl font-black text-slate-900 dark:text-slate-50">
-                              {selectedInfluencer.firstName} {selectedInfluencer.lastName}
-                            </h3>
-                            <Badge variant="outline" className="w-fit mx-auto md:mx-0 font-black uppercase tracking-widest text-[10px] px-3 py-1 bg-white dark:bg-slate-900 shadow-sm border-slate-200 text-primary">
-                              {selectedInfluencer.platform}
-                            </Badge>
+                  <div className="flex flex-col h-[85vh]">
+                    {/* Modal Identity Header */}
+                    <div className="px-10 pt-10 pb-6 bg-gradient-to-br from-indigo-50/50 via-white to-transparent border-b border-slate-50">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-6">
+                          <div className="group relative">
+                            <div className="absolute -inset-1 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-[28px] blur opacity-25 group-hover:opacity-40 transition-opacity"></div>
+                            <Avatar className="relative w-24 h-24 border-4 border-white shadow-2xl rounded-[24px]">
+                              <AvatarImage src={selectedInfluencer.imageUrl} className="object-cover" />
+                              <AvatarFallback className="text-2xl font-black bg-slate-50 text-slate-300">
+                                {selectedInfluencer.firstName[0]}{selectedInfluencer.lastName[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                            <button className="absolute -bottom-2 -right-2 p-2.5 bg-slate-900 text-white rounded-2xl shadow-xl hover:scale-110 active:scale-95 transition-all">
+                              <Camera className="w-4 h-4" />
+                            </button>
                           </div>
-                          <p className="text-sm text-slate-500 font-bold uppercase tracking-[0.1em]">{selectedInfluencer.category}</p>
-
-                          <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
-                            <Button variant="outline" size="sm" className="h-9 text-[10px] font-bold uppercase tracking-widest rounded-xl bg-white dark:bg-slate-900 shadow-sm transition-all hover:shadow-md border-slate-200">
-                              <Upload className="w-3.5 h-3.5 mr-2" />
-                              Update Identity
-                            </Button>
-                            <Button variant="ghost" size="sm" className="h-9 text-[10px] font-bold uppercase tracking-widest text-destructive hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl">
-                              Purge Avatar
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-8 px-8 py-2 border-l border-slate-200 dark:border-slate-800 hidden lg:grid z-10">
-                          <div className="text-center space-y-1">
-                            <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Followers</p>
-                            <p className="text-2xl font-black text-slate-900 dark:text-slate-50">{((selectedInfluencer.followers ?? 0) / 1000).toFixed(1)}K</p>
-                          </div>
-                          <div className="text-center space-y-1">
-                            <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Commission</p>
-                            <div className="flex items-center justify-center gap-1.5">
-                              <p className="text-2xl font-black text-slate-900 dark:text-slate-50">{selectedInfluencer.commissionRate}%</p>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-3">
+                              <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                                {selectedInfluencer.firstName} {selectedInfluencer.lastName}
+                              </h2>
+                              <Badge className="bg-indigo-500 text-white border-none rounded-xl h-6 font-bold text-[10px] uppercase tracking-widest px-3">
+                                {selectedInfluencer.platform}
+                              </Badge>
                             </div>
+                            <p className="text-sm font-bold text-slate-400 flex items-center gap-2 uppercase tracking-widest leading-none">
+                              <Megaphone className="w-4 h-4 text-indigo-400" />
+                              {selectedInfluencer.category} Resonance
+                            </p>
                           </div>
                         </div>
                       </div>
+                    </div>
 
-                      <Tabs defaultValue="details" className="w-full">
-                        <TabsList className="flex w-full overflow-x-auto h-auto p-1.5 bg-slate-100/50 dark:bg-slate-900/50 rounded-2xl mb-8 no-scrollbar border shadow-inner">
-                          <TabsTrigger value="details" className="flex-1 py-3 px-4 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all font-bold gap-2 text-xs uppercase tracking-widest">
-                            Identity Analytics
-                          </TabsTrigger>
-                          <TabsTrigger value="performance" className="flex-1 py-3 px-4 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all font-bold gap-2 text-xs uppercase tracking-widest">
-                            Reach Data
-                          </TabsTrigger>
-                          <TabsTrigger value="campaigns" className="flex-1 py-3 px-4 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all font-bold gap-2 text-xs uppercase tracking-widest">
-                            Collab Log
-                          </TabsTrigger>
-                          <TabsTrigger value="notes" className="flex-1 py-3 px-4 rounded-xl data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-lg data-[state=active]:text-primary transition-all font-bold gap-2 text-xs uppercase tracking-widest">
-                            Internal Intel
-                          </TabsTrigger>
+                    <div className="flex-1 overflow-y-auto px-10 py-10 custom-scrollbar">
+                      <Tabs defaultValue="details" className="space-y-10">
+                        <TabsList className="bg-slate-100/50 p-1.5 rounded-[20px] h-14 border border-slate-200/50 backdrop-blur-sm gap-1">
+                          {[
+                            { value: "details", label: "Identity" },
+                            { value: "partnership", label: "Metrics" },
+                            { value: "history", label: "Campaigns" },
+                            { value: "notes", label: "Intelligence" }
+                          ].map((tab) => (
+                            <TabsTrigger
+                              key={tab.value}
+                              value={tab.value}
+                              className="flex-1 rounded-2xl font-black text-[10px] uppercase tracking-[0.15em] data-[state=active]:bg-white data-[state=active]:text-indigo-600 data-[state=active]:shadow-lg active:scale-95 transition-all text-slate-400"
+                            >
+                              {tab.label}
+                            </TabsTrigger>
+                          ))}
                         </TabsList>
 
-                        <TabsContent value="details" className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                        <TabsContent value="details" className="mt-0 focus-visible:ring-0 outline-none">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-3">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Legal Designation</Label>
-                              <Input
-                                className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20 font-bold"
-                                defaultValue={`${selectedInfluencer.firstName} ${selectedInfluencer.lastName}`}
-                              />
-                            </div>
-                            <div className="space-y-3">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Secure Email Node</Label>
-                              <Input
-                                className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20 font-bold"
-                                defaultValue={selectedInfluencer.email}
-                              />
-                            </div>
-                            <div className="space-y-3">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Direct Contact Vector</Label>
-                              <Input
-                                className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20 font-bold"
-                                defaultValue={selectedInfluencer.phone}
-                              />
-                            </div>
-                            <div className="space-y-3">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Primary Network Focus</Label>
+                            {[
+                              { id: "editFirstName", label: "First identity", value: selectedInfluencer.firstName },
+                              { id: "editLastName", label: "Last identity", value: selectedInfluencer.lastName },
+                              { id: "editEmail", label: "Email gateway", value: selectedInfluencer.email },
+                              { id: "editPhone", label: "Contact pulse", value: selectedInfluencer.phone }
+                            ].map((field) => (
+                              <div key={field.id} className="space-y-2">
+                                <Label htmlFor={field.id} className="text-xs font-bold text-slate-500 uppercase tracking-[0.1em] ml-1">{field.label}</Label>
+                                <Input
+                                  id={field.id}
+                                  className="h-12 rounded-xl border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500/30 transition-all font-medium"
+                                  defaultValue={field.value}
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </TabsContent>
+
+                        <TabsContent value="partnership" className="mt-0 focus-visible:ring-0 outline-none">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                              <Label className="text-xs font-bold text-slate-500 uppercase tracking-[0.1em] ml-1">Primary channel</Label>
                               <Select defaultValue={selectedInfluencer.platform}>
-                                <SelectTrigger className="h-12 rounded-xl border-slate-200 shadow-sm font-bold">
+                                <SelectTrigger className="h-12 rounded-xl border-slate-100 bg-slate-50/50 font-bold text-[10px] uppercase tracking-wider text-slate-600">
                                   <SelectValue />
                                 </SelectTrigger>
-                                <SelectContent className="rounded-xl">
-                                  <SelectItem value="Instagram" className="rounded-lg font-bold">Instagram</SelectItem>
-                                  <SelectItem value="Youtube" className="rounded-lg font-bold">YouTube</SelectItem>
-                                  <SelectItem value="Twitter" className="rounded-lg font-bold">Twitter</SelectItem>
-                                  <SelectItem value="Facebook" className="rounded-lg font-bold">Facebook</SelectItem>
+                                <SelectContent className="rounded-xl border-slate-100 shadow-2xl">
+                                  <SelectItem value="Instagram" className="text-xs font-bold uppercase tracking-wider">Instagram</SelectItem>
+                                  <SelectItem value="Youtube" className="text-xs font-bold uppercase tracking-wider">YouTube</SelectItem>
+                                  <SelectItem value="Twitter" className="text-xs font-bold uppercase tracking-wider">Twitter</SelectItem>
+                                  <SelectItem value="Facebook" className="text-xs font-bold uppercase tracking-wider">Facebook</SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>
-                            <div className="space-y-3">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Relative Reach Index</Label>
+                            <div className="space-y-2">
+                              <Label className="text-xs font-bold text-slate-500 uppercase tracking-[0.1em] ml-1">Reach index</Label>
                               <Input
                                 type="number"
-                                className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20 font-bold"
+                                className="h-12 rounded-xl border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500/30 transition-all font-black text-rose-500"
                                 defaultValue={selectedInfluencer.followers}
                               />
                             </div>
-                            <div className="space-y-3">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Remuneration Rate (%)</Label>
+                            <div className="space-y-2">
+                              <Label className="text-xs font-bold text-slate-500 uppercase tracking-[0.1em] ml-1">Incentive rate (%)</Label>
                               <Input
                                 type="number"
-                                className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20 font-bold"
+                                className="h-12 rounded-xl border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500/30 transition-all font-black text-emerald-500"
                                 defaultValue={selectedInfluencer.commissionRate}
                               />
                             </div>
-                            <div className="space-y-3">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Niche Classification</Label>
+                            <div className="space-y-2">
+                              <Label className="text-xs font-bold text-slate-500 uppercase tracking-[0.1em] ml-1">Profile Category</Label>
                               <Input
-                                className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20 font-bold"
+                                className="h-12 rounded-xl border-slate-100 bg-slate-50/50 focus:bg-white focus:border-indigo-500/30 transition-all font-medium"
                                 defaultValue={selectedInfluencer.category}
                               />
                             </div>
-                            <div className="space-y-3">
-                              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Platform Identity Link</Label>
-                              <Input
-                                className="h-12 rounded-xl border-slate-200 bg-white dark:bg-slate-900 shadow-sm focus:ring-primary/20 font-bold"
-                                defaultValue={selectedInfluencer.socialMediaLinks}
-                              />
-                            </div>
                           </div>
                         </TabsContent>
 
-                        <TabsContent value="performance" className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-                          <div className="flex flex-col items-center justify-center py-16 bg-slate-50/50 dark:bg-slate-900/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 shadow-inner">
-                            <div className="p-5 bg-white dark:bg-slate-800 rounded-2xl shadow-xl mb-6 transform transition-transform hover:rotate-12 border border-slate-100">
-                              <TrendingUp className="w-10 h-10 text-primary" />
+                        <TabsContent value="history" className="mt-0 focus-visible:ring-0 outline-none">
+                          <div className="flex flex-col items-center justify-center py-20 bg-slate-50/30 rounded-[32px] border-2 border-dashed border-slate-100">
+                            <div className="relative mb-6">
+                              <div className="absolute -inset-4 bg-indigo-500/5 blur-2xl rounded-full"></div>
+                              <div className="relative w-20 h-20 bg-white rounded-[24px] shadow-2xl flex items-center justify-center transition-transform hover:rotate-6 duration-500">
+                                <Calendar className="w-10 h-10 text-indigo-500" />
+                              </div>
                             </div>
-                            <h3 className="text-xl font-black text-slate-900 dark:text-slate-50 mb-3 tracking-tight">
-                              Performance Analytics Matrix
-                            </h3>
-                            <p className="text-slate-500 dark:text-slate-400 text-center max-w-sm px-8 text-sm leading-relaxed font-bold">
-                              Comprehensive metrics across engagement depth, conversion rates, and ROI trajectory for this node.
-                            </p>
-                            <Button className="mt-8 h-12 px-8 rounded-xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-primary/20">
-                              Access Deep Analytics
-                            </Button>
+                            <h4 className="text-xl font-black text-slate-900 tracking-tight mb-2">Campaign history</h4>
+                            <p className="text-xs font-bold text-slate-400 text-center uppercase tracking-widest max-w-[240px]">No active campaigns recorded in registry</p>
                           </div>
                         </TabsContent>
 
-                        <TabsContent value="campaigns" className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-                          <div className="flex flex-col items-center justify-center py-16 bg-slate-50/50 dark:bg-slate-900/30 rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 shadow-inner">
-                            <div className="p-5 bg-white dark:bg-slate-800 rounded-2xl shadow-xl mb-6 transform transition-transform hover:-rotate-12 border border-slate-100">
-                              <Calendar className="w-10 h-10 text-primary" />
-                            </div>
-                            <h3 className="text-xl font-black text-slate-900 dark:text-slate-50 mb-3 tracking-tight">
-                              Collaboration Registry
-                            </h3>
-                            <p className="text-slate-500 dark:text-slate-400 text-center max-w-sm px-8 text-sm leading-relaxed font-bold">
-                              Historical campaign interactions, active project protocols, and future activation schedules.
-                            </p>
-                            <Button variant="outline" className="mt-8 h-12 px-8 rounded-xl font-black uppercase tracking-widest text-[11px] border-slate-200">
-                              Sync Registry
-                            </Button>
-                          </div>
-                        </TabsContent>
-
-                        <TabsContent value="notes" className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-                          <div className="space-y-4">
-                            <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Internal Intelligence Node</Label>
+                        <TabsContent value="notes" className="mt-0 focus-visible:ring-0 outline-none">
+                          <div className="space-y-3">
+                            <Label className="text-xs font-bold text-slate-500 uppercase tracking-[0.1em] ml-1">Internal intelligence</Label>
                             <Textarea
-                              placeholder="Document private performance metrics, affiliation observations, or restrictive negotiation parameters..."
-                              className="min-h-[200px] rounded-3xl border-slate-200 p-8 focus:ring-primary/20 bg-slate-50/50 dark:bg-slate-900/50 shadow-inner resize-none text-sm font-bold leading-relaxed"
+                              placeholder="Add private observations or negotiation details..."
+                              className="min-h-[200px] rounded-[24px] border-slate-100 bg-slate-50/30 p-8 focus:bg-white focus:border-indigo-500/30 transition-all text-sm font-medium leading-relaxed custom-scrollbar"
+                              defaultValue={selectedInfluencer.note}
                             />
                           </div>
                         </TabsContent>
                       </Tabs>
                     </div>
+
+                    <div className="px-10 py-8 bg-slate-50/50 border-t border-slate-100 flex gap-4">
+                      <Button
+                        variant="outline"
+                        className="flex-1 h-14 rounded-2xl border-slate-200 font-bold text-xs uppercase tracking-widest text-slate-500 hover:bg-white transition-all"
+                        onClick={() => setIsEditModalOpen(false)}
+                      >
+                        Discard Changes
+                      </Button>
+                      <Button
+                        onClick={handleUpdateInfluencer}
+                        disabled={modalLoading}
+                        className="flex-1 h-14 rounded-2xl font-bold text-xs uppercase tracking-widest bg-slate-900 text-white shadow-xl shadow-slate-200 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      >
+                        {modalLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Authorize Updates"}
+                      </Button>
+                    </div>
                   </div>
                 )}
-                <DialogFooter className="px-8 py-6 border-t bg-slate-50/50 dark:bg-slate-900/50 sticky bottom-0 z-10 backdrop-blur-sm">
-                  <Button
-                    variant="outline"
-                    className="h-12 px-6 rounded-xl font-black uppercase tracking-widest text-[11px] border-slate-200 hover:bg-slate-100 dark:border-slate-800"
-                    onClick={() => setIsEditModalOpen(false)}
-                  >
-                    Abort Interaction
-                  </Button>
-                  <Button
-                    onClick={handleUpdateInfluencer}
-                    disabled={modalLoading}
-                    className="h-12 px-8 rounded-xl font-black uppercase tracking-widest text-[11px] shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    {modalLoading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Synchronizing...
-                      </>
-                    ) : (
-                      "Commit Updates"
-                    )}
-                  </Button>
-                </DialogFooter>
               </DialogContent>
             </Dialog>
           </>

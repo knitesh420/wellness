@@ -440,152 +440,126 @@ const BlogsPage = () => {
 
   return (
     <TooltipProvider>
-      <div className="space-y-6 container mx-auto px-4 lg:px-0">
+      <div className="space-y-8 p-1">
         {error ? (
           <Error title="Error loading blogs" message={error} />
         ) : (
           <>
-            {/* Header */}
+            {/* Header section with refined typography */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Blog Management</h1>
-                <p className="text-sm text-muted-foreground">Manage your content strategy and SEO rankings</p>
+                <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+                  Content repository
+                </h1>
+                <p className="text-slate-500 text-sm mt-1">
+                  Orchestrate your narrative strategy and monitor digital resonance
+                </p>
               </div>
-              <div className="flex gap-2">
-                <Button onClick={() => setShowAddModal(true)} className="gap-2 h-10 px-4">
-                  <Plus className="w-4 h-4" />
-                  Add New Post
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={() => setShowAddModal(true)}
+                  className="h-10 px-5 rounded-xl font-bold text-xs uppercase tracking-widest bg-slate-900 text-white hover:bg-slate-800 shadow-lg shadow-slate-200 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  New narrative
                 </Button>
                 <Button
                   onClick={() => window.location.href = '/dashboard/blogs/addBlogs'}
-                  className="gap-2 h-10 px-4 bg-primary/10 text-primary hover:bg-primary/20 border-none"
+                  className="h-10 px-5 rounded-xl font-bold text-xs uppercase tracking-widest bg-white border-indigo-100 text-indigo-600 hover:bg-indigo-50 shadow-sm transition-all"
                   variant="outline"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  AI Draft
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  AI Intelligence
                 </Button>
               </div>
             </div>
 
-            {/* Stats Cards */}
+            {/* Premium Stat Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card className="dashboard-card border-none">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total Posts</p>
-                      <p className="text-2xl font-bold text-foreground mt-1">{blogs?.length || 0}</p>
+              {[
+                { label: "Total resonance", value: blogs?.length || 0, icon: FileText, color: "text-blue-600", bg: "bg-blue-50" },
+                { label: "Live narratives", value: (blogs || []).filter(b => b.status === 'published').length, icon: CheckCircle, color: "text-emerald-600", bg: "bg-emerald-50" },
+                { label: "Drafted nodes", value: (blogs || []).filter(b => b.status === 'draft').length, icon: Clock, color: "text-amber-600", bg: "bg-amber-50" },
+                { label: "Total engagement", value: (blogs || []).reduce((sum, b) => sum + (b.views || 0), 0).toLocaleString(), icon: TrendingUp, color: "text-purple-600", bg: "bg-purple-50" },
+              ].map((stat, i) => (
+                <Card key={i} className="border-none shadow-sm rounded-2xl bg-white overflow-hidden group hover:shadow-md transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                          {stat.label}
+                        </p>
+                        <p className="text-3xl font-black text-slate-900 tracking-tight">
+                          {stat.value}
+                        </p>
+                      </div>
+                      <div className={`p-3 ${stat.bg} ${stat.color} rounded-xl group-hover:scale-110 transition-transform duration-500`}>
+                        <stat.icon className="w-6 h-6" />
+                      </div>
                     </div>
-                    <div className="p-3 bg-primary/10 rounded-xl">
-                      <FileText className="w-6 h-6 text-primary" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="dashboard-card border-none">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Published</p>
-                      <p className="text-2xl font-bold text-foreground mt-1">{(blogs || []).filter(b => b.status === 'published').length}</p>
-                    </div>
-                    <div className="p-3 bg-emerald-100 rounded-xl">
-                      <CheckCircle className="w-6 h-6 text-emerald-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="dashboard-card border-none">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">In Draft</p>
-                      <p className="text-2xl font-bold text-foreground mt-1">{(blogs || []).filter(b => b.status === 'draft').length}</p>
-                    </div>
-                    <div className="p-3 bg-amber-100 rounded-xl">
-                      <Clock className="w-6 h-6 text-amber-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="dashboard-card border-none">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Article Views</p>
-                      <p className="text-2xl font-bold text-foreground mt-1">{(blogs || []).reduce((sum, b) => sum + b.views, 0).toLocaleString()}</p>
-                    </div>
-                    <div className="p-3 bg-blue-100 rounded-xl">
-                      <TrendingUp className="w-6 h-6 text-blue-600" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
 
-            {/* Filters Bar - Professional Clean Design */}
-            <Card className="bg-white border-slate-200 shadow-sm rounded-xl overflow-visible">
+            {/* Refined Filter & Search Bar */}
+            <Card className="border-none shadow-sm rounded-2xl bg-white/80 backdrop-blur-md overflow-hidden">
               <CardContent className="p-4">
-                <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <div className="flex flex-col lg:flex-row gap-4">
+                  <div className="flex-1 relative group">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
                     <Input
-                      type="text"
-                      placeholder="Search narrative repository..."
+                      placeholder="Search narrative repository by title, excerpt, tags..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-11 border-slate-200 rounded-lg focus:ring-primary/5 focus:border-primary transition-all"
+                      className="h-11 pl-11 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500/30 focus:bg-white transition-all text-sm font-medium"
                     />
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-2">
                     <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                      <SelectTrigger className="h-11 w-[150px] border-slate-200 rounded-lg text-sm font-medium">
-                        <div className="flex items-center gap-2">
-                          <Filter className="w-3.5 h-3.5 text-slate-400" />
-                          <SelectValue placeholder="Status" />
-                        </div>
+                      <SelectTrigger className="w-[140px] h-11 rounded-xl border-slate-100 bg-slate-50 font-bold text-xs uppercase tracking-widest text-slate-600 focus:ring-indigo-500/20">
+                        <SelectValue placeholder="Status" />
                       </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="All">All Statuses</SelectItem>
-                        <SelectItem value="published">Published</SelectItem>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
+                      <SelectContent className="rounded-xl border-slate-100 shadow-2xl">
+                        <SelectItem value="All" className="text-xs font-bold uppercase tracking-wider">All status</SelectItem>
+                        <SelectItem value="published" className="text-xs font-bold uppercase tracking-wider">Published</SelectItem>
+                        <SelectItem value="draft" className="text-xs font-bold uppercase tracking-wider">Draft</SelectItem>
+                        <SelectItem value="archived" className="text-xs font-bold uppercase tracking-wider">Archived</SelectItem>
                       </SelectContent>
                     </Select>
 
                     <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                      <SelectTrigger className="h-11 w-[150px] border-slate-200 rounded-lg text-sm font-medium">
-                        <div className="flex items-center gap-2">
-                          <Layout className="w-3.5 h-3.5 text-slate-400" />
-                          <SelectValue placeholder="Category" />
-                        </div>
+                      <SelectTrigger className="w-[160px] h-11 rounded-xl border-slate-100 bg-slate-50 font-bold text-xs uppercase tracking-widest text-slate-600 focus:ring-indigo-500/20">
+                        <SelectValue placeholder="Category" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="rounded-xl border-slate-100 shadow-2xl">
                         {blogCategories.map(category => (
-                          <SelectItem key={category} value={category}>
-                            {category === 'All' ? 'All Categories' : category}
+                          <SelectItem key={category} value={category} className="text-xs font-bold uppercase tracking-wider">
+                            {category === 'All' ? 'All categories' : category}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
 
-                    <div className="flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+                    <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl ml-2">
                       <Button
                         variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                        size="icon"
+                        size="sm"
                         onClick={() => setViewMode('grid')}
-                        className={`h-9 w-9 rounded-md transition-all ${viewMode === 'grid' ? 'bg-white shadow-sm text-primary border border-slate-200' : 'text-slate-500 hover:bg-white/50'}`}
+                        className={`h-9 px-4 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}`}
                       >
-                        <LayoutGrid className="w-4 h-4" />
+                        <LayoutGrid className="w-4 h-4 mr-2" />
+                        <span className="text-xs font-bold uppercase tracking-wider">Grid</span>
                       </Button>
                       <Button
                         variant={viewMode === 'table' ? 'default' : 'ghost'}
-                        size="icon"
+                        size="sm"
                         onClick={() => setViewMode('table')}
-                        className={`h-9 w-9 rounded-md transition-all ${viewMode === 'table' ? 'bg-white shadow-sm text-primary border border-slate-200' : 'text-slate-500 hover:bg-white/50'}`}
+                        className={`h-9 px-4 rounded-lg transition-all ${viewMode === 'table' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'}`}
                       >
-                        <TableIcon className="w-4 h-4" />
+                        <TableIcon className="w-4 h-4 mr-2" />
+                        <span className="text-xs font-bold uppercase tracking-wider">Table</span>
                       </Button>
                     </div>
                   </div>
@@ -593,74 +567,90 @@ const BlogsPage = () => {
               </CardContent>
             </Card>
 
+            {/* Content Display */}
             {isLoading ? (
               <div className="py-24 flex flex-col items-center justify-center space-y-4">
-                <Loader2 className="w-10 h-10 text-primary animate-spin" />
-                <p className="text-slate-400 font-medium text-sm">Loading narratives...</p>
+                <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
+                <p className="text-slate-400 font-bold text-xs uppercase tracking-[0.2em]">Synchronizing narrative database...</p>
               </div>
             ) : filteredBlogs.length === 0 ? (
-              <Card className="py-20 border-2 border-dashed border-slate-200 bg-slate-50/50 rounded-xl flex flex-col items-center justify-center text-center">
-                <div className="p-4 bg-white rounded-full shadow-sm mb-4">
-                  <FileX className="w-10 h-10 text-slate-300" />
-                </div>
-                <h3 className="text-lg font-semibold text-slate-900">No blogs found</h3>
-                <p className="text-slate-500 text-sm max-w-xs mx-auto mb-6">We couldn&apos;t find any posts matching your search criteria.</p>
-                <Button
-                  variant="outline"
-                  onClick={() => { setSearchTerm(''); setSelectedStatus('All'); setSelectedCategory('All'); }}
-                  className="h-10 rounded-lg px-6"
-                >
-                  Clear all filters
-                </Button>
-              </Card>
+              <NoData
+                message="No narratives detected"
+                description="The search parameters did not yield any blog profiles from the current repository."
+                icon={<FileX className="w-full h-full text-slate-200" />}
+                size="lg"
+              />
             ) : (
               <>
                 {viewMode === 'grid' ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {paginatedBlogs.map((blog) => (
                       <Card
                         key={blog._id}
-                        className="dashboard-card group flex flex-col h-full border-none"
+                        className="group border-none shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-500 rounded-[24px] bg-white overflow-hidden flex flex-col h-full"
                       >
-                        <div className="relative h-48 w-full overflow-hidden rounded-t-xl">
+                        <div className="relative h-56 w-full overflow-hidden">
                           <Image
                             src={blog.featuredImage || '/placeholder-product.svg'}
                             alt={blog.title || 'Blog post'}
                             fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
                           />
-                          <div className="absolute top-3 right-3">
-                            <Badge variant={getStatusColor(blog.status)} className="font-semibold shadow-sm">
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                          <div className="absolute top-4 right-4 z-10">
+                            <Badge variant={getStatusColor(blog.status)} className="h-6 rounded-lg px-2 text-[10px] font-bold uppercase tracking-wider shadow-lg">
                               {blog.status}
                             </Badge>
                           </div>
                         </div>
-                        <CardHeader className="p-5 pb-2">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Badge variant="secondary" className="text-[10px] uppercase font-bold tracking-wider">{blog.category}</Badge>
-                            <span className="text-[10px] text-muted-foreground font-medium flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
-                              {new Date(blog.createdAt).toLocaleDateString()}
+                        <CardHeader className="p-6 pb-2">
+                          <div className="flex items-center gap-3 mb-3">
+                            <Badge variant="secondary" className="bg-indigo-50 text-indigo-600 border-none rounded-lg h-5 text-[9px] font-black uppercase tracking-widest">{blog.category}</Badge>
+                            <span className="text-[9px] font-black text-slate-400 flex items-center gap-1 uppercase tracking-widest leading-none">
+                              <Calendar className="w-3 h-3 text-indigo-400" />
+                              {new Date(blog.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                             </span>
                           </div>
-                          <CardTitle className="text-lg leading-snug line-clamp-2 hover:text-primary transition-colors cursor-pointer">{blog.title}</CardTitle>
+                          <CardTitle className="text-xl font-bold text-slate-900 leading-tight tracking-tight line-clamp-2 min-h-[3rem] group-hover:text-indigo-600 transition-colors">
+                            {blog.title}
+                          </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-5 flex-1 pt-0">
-                          <p className="text-sm text-slate-500 line-clamp-2 mb-6">{blog.excerpt}</p>
-                          <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                            <div className="flex items-center gap-2">
-                              <div className="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center">
-                                <User className="w-3.5 h-3.5 text-slate-500" />
+                        <CardContent className="p-6 pt-0 flex-1 flex flex-col">
+                          <p className="text-sm font-medium text-slate-500 line-clamp-2 mb-6 flex-1">{blog.excerpt}</p>
+                          <div className="flex items-center justify-between pt-5 border-t border-slate-50">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center border-2 border-white shadow-sm ring-4 ring-slate-50">
+                                <User className="w-4 h-4 text-slate-500" />
                               </div>
-                              <span className="text-xs font-semibold text-slate-700">{blog.author}</span>
+                              <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest">{blog.author}</span>
                             </div>
-                            <div className="flex gap-1">
-                              <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-primary hover:bg-primary/10 rounded-md" onClick={() => openEditModal(blog as BlogWithEditableTags)}>
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                              <Button size="icon" variant="ghost" className="h-8 w-8 text-slate-400 hover:text-destructive hover:bg-destructive/10 rounded-md" onClick={() => openDeleteModal(blog as BlogWithEditableTags)}>
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
+                            <div className="flex gap-2">
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-9 w-9 rounded-xl text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+                                    onClick={() => openEditModal(blog as BlogWithEditableTags)}
+                                  >
+                                    <Edit className="w-4 h-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Calibrate Node</TooltipContent>
+                              </Tooltip>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-9 w-9 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all"
+                                    onClick={() => openDeleteModal(blog as BlogWithEditableTags)}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Decommission Node</TooltipContent>
+                              </Tooltip>
                             </div>
                           </div>
                         </CardContent>
@@ -668,24 +658,23 @@ const BlogsPage = () => {
                     ))}
                   </div>
                 ) : (
-                  <Card className="dashboard-card border-none overflow-hidden">
+                  <Card className="border-none shadow-sm rounded-[24px] bg-white overflow-hidden">
                     <Table>
-                      <TableHeader className="bg-slate-50 font-bold">
-                        <TableRow>
-                          <TableHead className="w-[400px]">Article Details</TableHead>
-                          <TableHead>Author</TableHead>
-                          <TableHead>Category</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>Engagement</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
+                      <TableHeader className="bg-slate-50/50">
+                        <TableRow className="border-slate-100/50 hover:bg-transparent">
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest w-[45%]">Narrative details</TableHead>
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest">Architect</TableHead>
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest">Intelligence</TableHead>
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest">Status</TableHead>
+                          <TableHead className="py-5 px-6 font-bold text-slate-400 text-[10px] uppercase tracking-widest text-right">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {paginatedBlogs.map(blog => (
-                          <TableRow key={blog._id} className="hover:bg-slate-50/50 transition-colors">
-                            <TableCell>
+                          <TableRow key={blog._id} className="border-slate-100/50 group transition-colors hover:bg-slate-50/50">
+                            <TableCell className="py-4 px-6">
                               <div className="flex items-center gap-4">
-                                <div className="relative w-16 h-12 rounded-lg overflow-hidden border border-slate-100 bg-slate-50 flex-shrink-0">
+                                <div className="relative w-20 h-14 rounded-xl overflow-hidden border-2 border-slate-50 shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform">
                                   <Image
                                     src={blog.featuredImage || '/placeholder-product.svg'}
                                     alt={blog.title || 'Blog post'}
@@ -695,37 +684,57 @@ const BlogsPage = () => {
                                 </div>
                                 <div className="min-w-0">
                                   <p className="font-bold text-slate-900 truncate">{blog.title || 'Untitled'}</p>
-                                  <p className="text-xs text-muted-foreground truncate">{blog.excerpt || 'No excerpt...'}</p>
+                                  <p className="text-[10px] font-bold text-slate-400 truncate uppercase mt-0.5">{blog.excerpt || 'No excerpt available...'}</p>
                                 </div>
                               </div>
                             </TableCell>
-                            <TableCell>
-                              <span className="text-sm font-medium text-slate-700">{blog.author}</span>
+                            <TableCell className="py-4 px-6">
+                              <span className="text-[10px] font-black text-slate-700 uppercase tracking-widest">{blog.author}</span>
                             </TableCell>
-                            <TableCell>
-                              <Badge variant="outline" className="font-medium">{blog.category}</Badge>
+                            <TableCell className="py-4 px-6">
+                              <div className="flex flex-col gap-1.5">
+                                <Badge variant="outline" className="w-fit rounded-lg border-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest">
+                                  {blog.category}
+                                </Badge>
+                                <div className="flex items-center gap-1 text-emerald-600">
+                                  <TrendingUp className="w-3 h-3" />
+                                  <span className="text-[10px] font-black">{blog.views.toLocaleString()}</span>
+                                </div>
+                              </div>
                             </TableCell>
-                            <TableCell>
-                              <Badge variant={getStatusColor(blog.status)} className="capitalize px-2.5 py-0.5">
+                            <TableCell className="py-4 px-6">
+                              <Badge variant={getStatusColor(blog.status)} className="rounded-lg text-[10px] font-bold uppercase tracking-wider px-2.5">
                                 {blog.status}
                               </Badge>
                             </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-3">
-                                <span className="text-xs font-bold text-slate-600 flex items-center gap-1">
-                                  <TrendingUp className="w-3 h-3 text-emerald-500" />
-                                  {blog.views.toLocaleString()}
-                                </span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-right">
+                            <TableCell className="py-4 px-6 text-right">
                               <div className="flex justify-end gap-1">
-                                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg" onClick={() => openEditModal(blog as BlogWithEditableTags)}>
-                                  <Edit className="w-4 h-4" />
-                                </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-destructive hover:bg-destructive/10" onClick={() => openDeleteModal(blog as BlogWithEditableTags)}>
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-9 w-9 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50"
+                                      onClick={() => openEditModal(blog as BlogWithEditableTags)}
+                                    >
+                                      <Edit className="w-4 h-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Modify Record</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-9 w-9 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                                      onClick={() => openDeleteModal(blog as BlogWithEditableTags)}
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Erase Record</TooltipContent>
+                                </Tooltip>
                               </div>
                             </TableCell>
                           </TableRow>
@@ -735,33 +744,33 @@ const BlogsPage = () => {
                   </Card>
                 )}
 
-                {/* Pagination */}
+                {/* Refined Pagination */}
                 {!isLoading && filteredBlogs.length > 0 && totalPages > 1 && (
-                  <div className="flex items-center justify-between py-4 mt-4 bg-white px-6 rounded-xl border border-slate-200">
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  <div className="flex items-center justify-between px-2 pt-4">
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">
                       Page {currentPage} of {totalPages}
                     </p>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
-                        className="h-9 px-3 rounded-lg border-slate-200"
+                        className="h-10 px-4 rounded-xl border-slate-200 font-bold text-xs uppercase tracking-widest transition-all"
                       >
                         <ChevronLeft className="w-4 h-4 mr-1" />
-                        Back
+                        Previous
                       </Button>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 mx-2">
                         {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                           const pageNum = i + 1;
                           return (
                             <Button
                               key={pageNum}
-                              variant={currentPage === pageNum ? "default" : "ghost"}
+                              variant={currentPage === pageNum ? "default" : "outline"}
                               size="sm"
                               onClick={() => setCurrentPage(pageNum)}
-                              className="w-9 h-9 p-0 rounded-lg"
+                              className={`w-10 h-10 rounded-xl text-xs font-black transition-all ${currentPage === pageNum ? 'bg-slate-900 shadow-lg scale-110' : 'border-slate-200'}`}
                             >
                               {pageNum}
                             </Button>
@@ -773,7 +782,7 @@ const BlogsPage = () => {
                         size="sm"
                         onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                         disabled={currentPage === totalPages}
-                        className="h-9 px-3 rounded-lg border-slate-200"
+                        className="h-10 px-4 rounded-xl border-slate-200 font-bold text-xs uppercase tracking-widest transition-all"
                       >
                         Next
                         <ChevronRight className="w-4 h-4 ml-1" />
@@ -782,9 +791,7 @@ const BlogsPage = () => {
                   </div>
                 )}
               </>
-            )}
-
-            {/* Add Blog Modal */}
+            )}   {/* Add Blog Modal */}
             <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
               <DialogContent className="max-w-3xl p-0 gap-0 rounded-2xl border-slate-200 shadow-2xl overflow-hidden bg-white">
                 <div className="bg-slate-50/50 px-8 py-6 border-b border-slate-100">
